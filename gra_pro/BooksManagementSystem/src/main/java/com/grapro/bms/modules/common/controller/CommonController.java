@@ -1,5 +1,11 @@
 package com.grapro.bms.modules.common.controller;
 
+import java.net.InetAddress;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -80,16 +86,36 @@ public class CommonController {
 	 */
 	@RequestMapping("/index")
 	//@ResponseBody
-	public String indexPage(ModelMap modelMap) {
-		/*Subject subject = SecurityUtils.getSubject();
+	public String indexPage(HttpServletRequest request,ModelMap modelMap) {
+		Subject subject = SecurityUtils.getSubject();
 		LOGGER.debug("------------------" + subject.isRemembered());
 		LOGGER.debug("------------------" + subject.isAuthenticated());
 		
 		User user = accountService.getUserByName((String)subject.getPrincipal());
 		if (user == null) {
 			return "common/login";
-		}*/
-		//modelMap.addAttribute("template","common/welcome");
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String ipAddress = null;
+		String serverName = null;
+		String loacalUrl = request.getScheme() + "://" + request.getLocalAddr() 
+			+ ":" + request.getServerPort() + request.getServletPath();
+		try {
+			InetAddress inetAddress = InetAddress.getLocalHost();
+			ipAddress = inetAddress.getHostAddress();
+			serverName = inetAddress.getHostName();
+		} catch (Exception e) {
+			ipAddress = "无法获取ip";
+		}
+		
+		modelMap.addAttribute("loginTime", sdf.format(new Date()));
+		modelMap.addAttribute("user", user);
+		modelMap.addAttribute("userIp", ipAddress);
+		modelMap.addAttribute("localIp", ipAddress);
+		modelMap.addAttribute("serverName", serverName);
+		modelMap.addAttribute("loacalUrl", loacalUrl);
+		modelMap.addAttribute("template","common/welcome");
 		return "index";
 	}
 	

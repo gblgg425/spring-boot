@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import com.grapro.bms.modules.account.entity.User;
+import com.grapro.bms.modules.common.vo.SearchVo;
 
 /**
  * 账户相关dao
@@ -33,19 +34,21 @@ public interface AccountDao {
 	/**
 	 * 根据用户名 查询 user
 	 */
-	/*@Results(id="userResult", value={
-			@Result(column="user_id", property="userId"),
-			@Result(column="user_id",property="roles",
-					javaType=List.class,
-					//////////////////////////////////
-					many=@Many(select="com.hqyj.erp.modules.authority.dao.AuthorityDao.getRolesByUserId"))
-			//////////////////////////////////////////////////////
-		})*/
 	@Select("select * from user where account=#{account}")
 	@Results(id="userResult", value= {
 			@Result(column="account",property="account"),
 			@Result(column="password",property="password")
 	})
 	User getUserByName(String account);
+
+	@Select("select * from user")
+	//@ResultMap(value="userResult")
+	List<User> getUserList(SearchVo userSearch);
+	
+	/**
+	 * 根据user Id 查询user
+	 */
+	@Select("select * from user where user_id=#{userId}")
+	User getUserById(int userId);
 
 }

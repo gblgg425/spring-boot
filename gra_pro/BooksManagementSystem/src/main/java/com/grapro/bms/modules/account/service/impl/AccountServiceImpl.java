@@ -1,5 +1,8 @@
 package com.grapro.bms.modules.account.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -9,10 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.grapro.bms.modules.account.dao.AccountDao;
 import com.grapro.bms.modules.account.entity.User;
 import com.grapro.bms.modules.account.service.AccountService;
 import com.grapro.bms.modules.common.vo.Result;
+import com.grapro.bms.modules.common.vo.SearchVo;
 import com.grapro.bms.util.MD5Util;
 
 @Service
@@ -88,6 +94,29 @@ public class AccountServiceImpl implements AccountService{
 	@Override
 	public User getUserByName(String account) {
 		return accountDao.getUserByName(account);
+	}
+
+	/* 
+	 * 根据页面查询条件获取user 列表，封装到pageInfo对象中
+	 */
+	@Override
+	public PageInfo<User> getUserList(SearchVo userSearch) {
+		Subject subject = SecurityUtils.getSubject();
+		String currentRole = (String) subject.getPrincipal();
+		List<User> users = new ArrayList<User>();
+		SearchVo.initSearchVo(userSearch);
+		PageHelper.startPage(userSearch.getCurrentPage(), userSearch.getPageSize());
+		if ("staff".equals(currentRole)) {
+		} else {
+			users = accountDao.getUserList(userSearch);
+		}
+		return new PageInfo<>(users);
+		
+	}
+
+	@Override
+	public User getUserById(int userId) {
+		return accountDao.getUserById(userId);
 	}
 
 	

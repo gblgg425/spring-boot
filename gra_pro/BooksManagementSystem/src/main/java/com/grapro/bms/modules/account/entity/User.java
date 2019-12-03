@@ -46,15 +46,8 @@ public class User {
 	//用户状态 ，0-不可用，1-可用
 	private int userStatus;
 	
-	private Integer positionId;
-	private Integer departId;
-	
 	// @transient 就是在给某个javabean上需要添加个属性，但是这个属性你又不希望给存到数据库中去，
 	// 仅仅是做个非静态的临时变量，用一下。不修改已经存在数据库的数据的数据结构。
-	@Transient
-	private String userPosition;
-	@Transient
-	private String userDepartement;
 	@Transient
 	private boolean rememberMe;
 	
@@ -74,8 +67,6 @@ public class User {
 		this.setUserName("--");
 		this.setUserSex("男");
 		this.setUserTelephone("--");
-		this.setUserDepartement("--");
-		this.setUserPosition("--");
 	}
 	// 添加用户时加密密码后再存入数据库
 	public void initUserPassword() {
@@ -176,39 +167,6 @@ public class User {
 
 	public void setUserStatus(int userStatus) {
 		this.userStatus = userStatus;
-	}
-
-	
-	public Integer getPositionId() {
-		return positionId;
-	}
-
-	public void setPositionId(Integer positionId) {
-		this.positionId = positionId;
-	}
-
-	public Integer getDepartId() {
-		return departId;
-	}
-
-	public void setDepartId(Integer departId) {
-		this.departId = departId;
-	}
-
-	public String getUserPosition() {
-		return userPosition;
-	}
-
-	public void setUserPosition(String userPosition) {
-		this.userPosition = userPosition;
-	}
-
-	public String getUserDepartement() {
-		return userDepartement;
-	}
-
-	public void setUserDepartement(String userDepartement) {
-		this.userDepartement = userDepartement;
 	}
 
 	public boolean getRememberMe() {
