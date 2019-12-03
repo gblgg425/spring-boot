@@ -60,7 +60,7 @@ public class CommonController {
 	public Result doRegister(@RequestBody User user) {// json的数据结构的请求
 		// 初始化信息
 		user.initUserInfo();
-		return accountService.insertUser(user);
+		return accountService.inserOrUpdatetUser(user);
 	}
 	/**
 	 * 用户登录

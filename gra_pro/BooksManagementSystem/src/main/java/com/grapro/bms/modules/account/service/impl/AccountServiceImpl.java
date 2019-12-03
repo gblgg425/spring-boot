@@ -31,24 +31,28 @@ public class AccountServiceImpl implements AccountService{
 	private AccountDao accountDao;
 	
 	@Override
-	public Result insertUser(User user) {
+	public Result inserOrUpdatetUser(User user) {
 		
 		user.setUserStatus(1);
 		
 		if (user == null || StringUtils.isBlank(user.getAccount()) 
-				|| StringUtils.isBlank(user.getPassword()) ) {
+				|| (StringUtils.isBlank(user.getPassword()) && user.getUserId() <= 0) ) {
 			return new Result(500, "User name or password is null.");
 		}
 		
 		User existUser = accountDao.getUserByName(user.getAccount());
 		if (existUser != null && 
-				((existUser.getUserId() != user.getUserId()) )) {
+				((existUser.getUserId() != user.getUserId()) || user.getUserId() <= 0 )) {
 			return new Result(500, "User is exist.");
 		}
 		
 		try {
 			user.initUserPassword();
-			accountDao.insertUser(user);
+			if(user.getUserId()>0) {
+				accountDao.updateUserById(user);
+			}else {
+				accountDao.insertUser(user);	
+			}
 			return new Result(200, "insert user success.", user);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,6 +121,21 @@ public class AccountServiceImpl implements AccountService{
 	@Override
 	public User getUserById(int userId) {
 		return accountDao.getUserById(userId);
+	}
+
+	/*
+	 * 根据userId 删除用户
+	 * */
+	@Override
+	public Result deleteUserById(int userId) {
+		try {
+			accountDao.deleteUserById(userId);
+			return new Result(200, "删除成功。");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Result(500,"删除失败。");
+		}
 	}
 
 	

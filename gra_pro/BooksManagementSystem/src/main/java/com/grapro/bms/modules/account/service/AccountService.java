@@ -10,7 +10,7 @@ import com.grapro.bms.modules.common.vo.SearchVo;
 
 public interface AccountService {
 	
-	Result insertUser(User user);
+	Result inserOrUpdatetUser(User user);
 	
 	Result getUserResult(User user);
 
@@ -21,6 +21,8 @@ public interface AccountService {
 	PageInfo<User> getUserList(SearchVo userSearch);
 	
 	User getUserById(int userId);
+	
+	Result deleteUserById(int userId);
 
 
 }
